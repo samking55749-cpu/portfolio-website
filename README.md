@@ -1,6 +1,18 @@
 # PortfolioCraft — Multi-User Portfolio Builder & Exporter
 
-**PortfolioCraft** is a user-friendly, no-code web application that enables **any user** to easily create, customize, live-preview, and download their own standalone personal portfolio website in seconds!
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Hosted%20Version-brightgreen?style=for-the-badge&logo=githubpages)](https://samking55749-cpu.github.io/portfolio-website/)
+[![Source Code](https://img.shields.io/badge/GitHub-Source%20Code-blue?style=for-the-badge&logo=github)](https://github.com/samking55749-cpu/portfolio-website)
+[![Documentation](https://img.shields.io/badge/Docs-DOCUMENTATION.md-orange?style=for-the-badge&logo=markdown)](./DOCUMENTATION.md)
+
+**PortfolioCraft** is a modern, no-code web application that enables anyone to easily create, customize, live-preview, and export their own standalone personal portfolio website in seconds!
+
+---
+
+## 🔗 Project Links
+
+- 🌐 **Live Hosted Version**: [https://samking55749-cpu.github.io/portfolio-website/](https://samking55749-cpu.github.io/portfolio-website/)
+- 📦 **GitHub Source Code**: [https://github.com/samking55749-cpu/portfolio-website](https://github.com/samking55749-cpu/portfolio-website)
+- 📖 **Full Documentation**: [DOCUMENTATION.md](./DOCUMENTATION.md)
 
 ---
 
