@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PortfolioCraft — Dynamic Multi-User Portfolio Builder & Exporter. Fill in your details, live preview, and download a standalone index.html file containing only your portfolio!">
+  <title>PortfolioCraft | Multi-User Portfolio Builder & Exporter</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Google Fonts: Poppins, Inter, Outfit, Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons 1.11.3 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==========================================================
+       APPLICATION HEADER & TOOLBAR
+       ========================================================== -->
+  <header class="app-header">
+    <!-- Brand -->
+    <a href="#" class="app-brand" onclick="location.reload(); return false;">
+      <i class="bi bi-lightning-charge-fill text-warning"></i>
+      <span>Portfolio<span class="text-gradient">Craft</span></span>
+    </a>
+
+    <!-- Primary Actions & Controls -->
+    <div class="d-flex align-items-center gap-2 ms-auto me-3">
+      <button type="button" class="btn btn-sm btn-outline-info" id="loadSampleBtn" title="Load sample data for testing">
+        <i class="bi bi-magic me-1"></i>Sample Data
+      </button>
+      <button type="button" class="btn btn-sm btn-outline-secondary" id="resetBtn" title="Clear all fields">
+        <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+      </button>
+      <button type="button" class="btn btn-sm btn-primary-gradient px-3" id="downloadPortfolioBtn">
+        <i class="bi bi-download me-1"></i>Download My Portfolio
+      </button>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="view-mode-toggle me-2 d-none d-md-flex">
+      <button type="button" class="view-mode-btn active" id="btnModeSplit" data-mode="split">
+        <i class="bi bi-layout-split me-1"></i>Builder &amp; Preview
+      </button>
+      <button type="button" class="view-mode-btn" id="btnModePreview" data-mode="preview">
+        <i class="bi bi-fullscreen me-1"></i>Full Generated Site
+      </button>
+    </div>
+
+    <!-- Theme Switcher -->
+    <button type="button" class="theme-toggle-btn ms-2" id="appThemeToggle" aria-label="Toggle light/dark mode">
+      <i class="bi bi-moon-stars-fill" id="appThemeIcon"></i>
+    </button>
+
+    <!-- Background Color Icon & Picker Dropdown -->
+    <div class="dropdown ms-2 position-relative">
+      <button type="button" class="theme-toggle-btn" id="appBgColorBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Choose background color" title="Change Background Color">
+        <i class="bi bi-palette2 text-warning" id="appBgColorIcon"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-end p-3 bg-surface border border-secondary-subtle shadow-lg" style="min-width: 270px; border-radius: 0.75rem; z-index: 1050;">
+        <h6 class="dropdown-header px-0 text-main fw-bold mb-2 d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-paint-bucket text-info me-2"></i>Background Color</span>
+        </h6>
+        <p class="small text-muted mb-2">Select an elegant preset or pick a custom background color:</p>
+        <div class="bg-color-swatches d-flex flex-wrap gap-2 mb-3">
+          <button type="button" class="bg-swatch-btn active" data-bg="#0b0f19" style="background-color: #0b0f19;" title="Deep Slate (Default)"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#0a192f" style="background-color: #0a192f;" title="Midnight Navy"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#121212" style="background-color: #121212;" title="Obsidian Charcoal"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#061a14" style="background-color: #061a14;" title="Emerald Dark"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#130f26" style="background-color: #130f26;" title="Royal Violet"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#1c1917" style="background-color: #1c1917;" title="Warm Mocha"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#18181b" style="background-color: #18181b;" title="Zinc Black"></button>
+          <button type="button" class="bg-swatch-btn" data-bg="#f8fafc" style="background-color: #f8fafc; border: 1px solid #cbd5e1;" title="Clean Light"></button>
+        </div>
+        <div class="d-flex align-items-center gap-2 pt-2 border-top border-secondary-subtle">
+          <label for="customBgColorInput" class="small text-muted mb-0 flex-grow-1 fw-semibold">Custom Color:</label>
+          <input type="color" id="customBgColorInput" class="form-control form-control-color border-0 p-0" value="#0b0f19" style="width:34px; height:34px; cursor:pointer;" title="Choose custom background color">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================
+       MAIN WORKSPACE (BUILDER PANE + LIVE PREVIEW PANE)
+       ========================================================== -->
+  <div class="app-workspace mode-split" id="appWorkspace">
+
+    <!-- --------------------------------------------------------
+         LEFT PANE: USER PROFILE INPUT FORM
+         -------------------------------------------------------- -->
+    <aside class="builder-panel" id="builderPanel">
+      <div class="p-3 border-bottom border-secondary-subtle bg-surface">
+        <h5 class="mb-1 fw-bold"><i class="bi bi-sliders text-gradient me-2"></i>Portfolio Builder Form</h5>
+        <p class="small text-muted mb-0">Fill in your information below to generate and download your custom portfolio website.</p>
+      </div>
+
+      <!-- Scrollable Form Body -->
+      <div class="builder-content p-3">
+        <form id="portfolioGeneratorForm" novalidate>
+          
+          <!-- SECTION 1: PERSONAL PROFILE -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-person-badge text-info me-2"></i>1. Personal Profile</span>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputName" class="form-label-sm">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control builder-form-control" id="inputName" placeholder="e.g. Alex Rivera" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputTitle" class="form-label-sm">Professional Title / Tagline <span class="text-danger">*</span></label>
+              <input type="text" class="form-control builder-form-control" id="inputTitle" placeholder="e.g. Full Stack Web Developer & UI Designer" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputBio" class="form-label-sm">About Me / Bio</label>
+              <textarea class="form-control builder-form-control" id="inputBio" rows="3" placeholder="Write a short summary about your skills, passion, and experience..."></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputPhotoUrl" class="form-label-sm">Profile Photo URL or File Upload</label>
+              <input type="text" class="form-control builder-form-control mb-2" id="inputPhotoUrl" placeholder="assets/images/profile.png or image URL">
+              <input type="file" class="form-control builder-form-control" id="inputPhotoFile" accept="image/*">
+            </div>
+
+            <div class="row g-2">
+              <div class="col-6">
+                <label for="inputCtaText" class="form-label-sm">Primary Button Text</label>
+                <input type="text" class="form-control builder-form-control" id="inputCtaText" placeholder="View Projects">
+              </div>
+              <div class="col-6">
+                <label for="inputCtaLink" class="form-label-sm">Primary Button Target</label>
+                <input type="text" class="form-control builder-form-control" id="inputCtaLink" placeholder="#projects">
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: TECHNICAL SKILLS -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-cpu text-info me-2"></i>2. Technical Skills</span>
+              <button type="button" class="btn btn-sm btn-outline-info" id="addSkillBtn">
+                <i class="bi bi-plus-lg me-1"></i>Add Skill
+              </button>
+            </div>
+            <p class="small text-muted mb-2">Add skills you want to display on your portfolio.</p>
+            
+            <div id="skillsListContainer">
+              <!-- Dynamic Skill Cards Injected Here -->
+            </div>
+          </div>
+
+          <!-- SECTION 3: FEATURED PROJECTS -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-folder-symlink text-info me-2"></i>3. Featured Projects</span>
+              <button type="button" class="btn btn-sm btn-outline-info" id="addProjectBtn">
+                <i class="bi bi-plus-lg me-1"></i>Add Project
+              </button>
+            </div>
+            <p class="small text-muted mb-2">Showcase your web applications, tools, and repositories.</p>
+
+            <div id="projectsListContainer">
+              <!-- Dynamic Project Cards Injected Here -->
+            </div>
+          </div>
+
+          <!-- SECTION 4: CERTIFICATES & ACHIEVEMENTS GALLERY -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-award text-info me-2"></i>4. Certificates &amp; Achievements</span>
+              <button type="button" class="btn btn-sm btn-outline-info" id="addAchievementBtn">
+                <i class="bi bi-plus-lg me-1"></i>Add Certificate / Media
+              </button>
+            </div>
+            <p class="small text-muted mb-2">Upload skill certificates, achievement badges, project photos, or demo videos.</p>
+
+            <div id="achievementsListContainer">
+              <!-- Dynamic Achievement Cards Injected Here -->
+            </div>
+          </div>
+
+          <!-- SECTION 5: CONTACT & SOCIAL LINKS -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-envelope-paper text-info me-2"></i>5. Contact Details &amp; Socials</span>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputEmail" class="form-label-sm">Email Address <span class="text-danger">*</span></label>
+              <input type="email" class="form-control builder-form-control" id="inputEmail" placeholder="your.name@example.com" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputPhone" class="form-label-sm">Phone Number</label>
+              <input type="text" class="form-control builder-form-control" id="inputPhone" placeholder="+1 (415) 555-0199">
+            </div>
+
+            <div class="mb-3">
+              <label for="inputLocation" class="form-label-sm">Location</label>
+              <input type="text" class="form-control builder-form-control" id="inputLocation" placeholder="San Francisco, CA (Open to Remote)">
+            </div>
+
+            <div class="mb-3">
+              <label for="inputAvailability" class="form-label-sm">Availability Status Badge</label>
+              <input type="text" class="form-control builder-form-control" id="inputAvailability" placeholder="Available for Hire &amp; Freelance Projects">
+            </div>
+
+            <div class="row g-2">
+              <div class="col-6 col-md-3">
+                <label for="inputGithub" class="form-label-sm">GitHub</label>
+                <input type="url" class="form-control builder-form-control" id="inputGithub" placeholder="https://github.com/username">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="inputLinkedin" class="form-label-sm">LinkedIn</label>
+                <input type="url" class="form-control builder-form-control" id="inputLinkedin" placeholder="https://linkedin.com/in/username">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="inputInstagram" class="form-label-sm">Instagram</label>
+                <input type="url" class="form-control builder-form-control" id="inputInstagram" placeholder="https://instagram.com/username">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="inputTwitter" class="form-label-sm">Twitter / X</label>
+                <input type="url" class="form-control builder-form-control" id="inputTwitter" placeholder="https://x.com/username">
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 6: THEME & CUSTOMIZATION -->
+          <div class="form-card-section mb-4">
+            <div class="form-section-title">
+              <span><i class="bi bi-palette text-info me-2"></i>6. Theme &amp; Color Scheme</span>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label-sm">Color Accent Theme</label>
+              <div class="color-picker-group">
+                <button type="button" class="color-swatch-btn active" data-color-blue="#3B82F6" data-color-cyan="#06B6D4" style="background: linear-gradient(135deg, #3B82F6, #06B6D4);" title="Blue & Cyan (Default)"></button>
+                <button type="button" class="color-swatch-btn" data-color-blue="#ec4899" data-color-cyan="#8b5cf6" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);" title="Pink & Purple"></button>
+                <button type="button" class="color-swatch-btn" data-color-blue="#10b981" data-color-cyan="#06b6d4" style="background: linear-gradient(135deg, #10b981, #06b6d4);" title="Emerald & Cyan"></button>
+                <button type="button" class="color-swatch-btn" data-color-blue="#f59e0b" data-color-cyan="#ef4444" style="background: linear-gradient(135deg, #f59e0b, #ef4444);" title="Amber & Red"></button>
+                <button type="button" class="color-swatch-btn" data-color-blue="#8b5cf6" data-color-cyan="#3b82f6" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);" title="Violet & Blue"></button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label-sm">Background Color</label>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="bg-color-swatches d-flex flex-wrap gap-2">
+                  <button type="button" class="bg-swatch-btn active" data-bg="#0b0f19" style="background-color: #0b0f19;" title="Deep Slate (Default)"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#0a192f" style="background-color: #0a192f;" title="Midnight Navy"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#121212" style="background-color: #121212;" title="Obsidian Charcoal"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#061a14" style="background-color: #061a14;" title="Emerald Dark"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#130f26" style="background-color: #130f26;" title="Royal Violet"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#1c1917" style="background-color: #1c1917;" title="Warm Mocha"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#18181b" style="background-color: #18181b;" title="Zinc Black"></button>
+                  <button type="button" class="bg-swatch-btn" data-bg="#f8fafc" style="background-color: #f8fafc; border: 1px solid #cbd5e1;" title="Clean Light"></button>
+                </div>
+                <div class="ms-auto d-flex align-items-center gap-1">
+                  <span class="small text-muted me-1">Custom:</span>
+                  <input type="color" id="formBgColorPicker" class="form-control form-control-color border-0 p-0" value="#0b0f19" style="width:30px; height:30px; cursor:pointer;" title="Choose custom background color">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="selectFont" class="form-label-sm">Primary Font Family</label>
+              <select class="form-select builder-form-control" id="selectFont">
+                <option value="'Poppins', 'Inter', sans-serif" selected>Poppins &amp; Inter (Modern &amp; Clean)</option>
+                <option value="'Inter', sans-serif">Inter Only (Sleek Minimalist)</option>
+                <option value="'Outfit', sans-serif">Outfit (Bold Geometric)</option>
+                <option value="'Fira Code', monospace">Fira Code (Developer Centric)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label-sm">Base Portfolio Theme Mode</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="themeModeRadio" id="radioDark" value="dark" checked>
+                <label class="btn btn-outline-secondary btn-sm" for="radioDark"><i class="bi bi-moon-fill me-1"></i>Dark Mode</label>
+                <input type="radio" class="btn-check" name="themeModeRadio" id="radioLight" value="light">
+                <label class="btn btn-outline-secondary btn-sm" for="radioLight"><i class="bi bi-sun-fill me-1"></i>Light Mode</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMIT ACTION BUTTON -->
+          <div class="mt-4 pt-2 pb-4">
+            <button type="submit" class="btn btn-primary-gradient w-100 py-3 fs-5 shadow-lg" id="generateProfileSubmitBtn">
+              <i class="bi bi-rocket-takeoff-fill me-2"></i>Build &amp; Preview Portfolio
+            </button>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+    <!-- --------------------------------------------------------
+         RIGHT PANE: LIVE GENERATED PORTFOLIO PREVIEW
+         -------------------------------------------------------- -->
+    <main class="preview-panel" id="previewPanel">
+      <!-- Preview Header Toolbar -->
+      <div class="preview-toolbar">
+        <div class="d-flex align-items-center gap-2">
+          <span class="pulse-dot"></span>
+          <span class="small text-muted fw-semibold">Live Preview</span>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="viewport-btn-group">
+            <button type="button" class="viewport-btn active" data-viewport="desktop" title="Desktop View">
+              <i class="bi bi-display"></i> Desktop
+            </button>
+            <button type="button" class="viewport-btn" data-viewport="tablet" title="Tablet View">
+              <i class="bi bi-tablet"></i> Tablet
+            </button>
+            <button type="button" class="viewport-btn" data-viewport="mobile" title="Mobile View">
+              <i class="bi bi-phone"></i> Mobile
+            </button>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline-light d-none d-md-inline-flex" id="expandFullscreenBtn">
+            <i class="bi bi-arrows-angle-expand me-1"></i>Full Screen
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview Stage Container -->
+      <div class="preview-stage" id="previewStage">
+        <div class="preview-viewport-wrapper" id="viewportWrapper">
+          <div id="previewContainer">
+            <!-- Dynamically Rendered Personal Portfolio Appears Here -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast Notification Feedback Container -->
+  <div class="toast-container-custom" id="toastContainer"></div>
+
+  <!-- Bootstrap 5.3.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JavaScript Application Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
